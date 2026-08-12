@@ -1,0 +1,34 @@
+VoltEye v0.1.0 — 微信群消息监控工具（南方电网供电所定制版）
+
+【运行】
+1. 保持微信 4.x（Weixin.exe）已登录
+2. 双击 volteye.exe，建议右键“以管理员身份运行”（读取微信进程内存需要权限）
+3. 数据保存在 exe 同目录的 data\ 文件夹（含本地数据库，勿删）
+
+【键盘操作】
+  1-7 / tab        切换面板
+  群管理           空格=监控  b=回填历史  e=备注名  r=刷新
+  消息流           /=过滤  m=只看匹配  f=跟随最新  g/G=顶/底
+  规则             n=新建  d=删除  空格=启停
+  导出             ←→调整选项  x=执行导出（xlsx 存入 data\exports）
+  设置             ←→调整轮询间隔/保留天数/容量上限/开机自启
+                   x=立即清理  c=清空消息（先自动归档到 data\archive）
+  q / ctrl+c       退出
+
+【监控逻辑】
+- 只有勾选监控的群才会采集落盘
+- 勾选“回填”后下次启动会补全该群全部历史
+- 未勾选回填的群从开启时刻起只采新消息
+
+【源码构建（可选)】
+  需要 Go 1.22+：go build -o volteye.exe ./cmd/volteye
+  git 历史完整保留在本目录 .git 中，tag: v0.1.0
+
+主程序 volteye.exe 支持这些手动覆盖参数：
+volteye.exe -dbstorage "D:\微信数据\xwechat_files\wxid_xxx\db_storage"
+volteye.exe -key "64位十六进制密钥"
+volteye.exe -data "D:\VoltEye数据"
+volteye.exe -interval 5s
+-dbstorage：自动检测失败时用（比如微信数据目录改到了非常规位置）
+-key：内存扫描失败时的终极兜底（密钥可从其他工具获取）
+-data：想换数据存储位置时用
